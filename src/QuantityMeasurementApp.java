@@ -1,32 +1,32 @@
 public class QuantityMeasurementApp {
 
-    public static void demonstrateAddition(
-            QuantityLength q1, QuantityLength q2) {
+    public static void demonstrateAdditionWithTarget(
+            QuantityLength q1,
+            QuantityLength q2,
+            LengthUnit targetUnit) {
 
-        QuantityLength result = q1.add(q2);
-        System.out.println(q1 + " + " + q2 + " = " + result);
+        QuantityLength result =
+                QuantityLength.add(q1, q2, targetUnit);
+
+        System.out.println(
+                "add(" + q1 + ", " + q2 + ", " + targetUnit + ") -> " + result);
     }
 
     public static void main(String[] args) {
 
-        demonstrateAddition(
+        demonstrateAdditionWithTarget(
                 new QuantityLength(1.0, LengthUnit.FEET),
-                new QuantityLength(12.0, LengthUnit.INCHES));
-
-        demonstrateAddition(
                 new QuantityLength(12.0, LengthUnit.INCHES),
-                new QuantityLength(1.0, LengthUnit.FEET));
+                LengthUnit.YARDS);
 
-        demonstrateAddition(
-                new QuantityLength(1.0, LengthUnit.YARDS),
-                new QuantityLength(3.0, LengthUnit.FEET));
-
-        demonstrateAddition(
+        demonstrateAdditionWithTarget(
                 new QuantityLength(36.0, LengthUnit.INCHES),
-                new QuantityLength(1.0, LengthUnit.YARDS));
+                new QuantityLength(1.0, LengthUnit.YARDS),
+                LengthUnit.FEET);
 
-        demonstrateAddition(
-                new QuantityLength(2.54, LengthUnit.CENTIMETERS),
-                new QuantityLength(1.0, LengthUnit.INCHES));
+        demonstrateAdditionWithTarget(
+                new QuantityLength(5.0, LengthUnit.FEET),
+                new QuantityLength(-2.0, LengthUnit.FEET),
+                LengthUnit.INCHES);
     }
 }
