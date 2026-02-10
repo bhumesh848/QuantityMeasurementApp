@@ -23,45 +23,61 @@ public final class QuantityLength {
         return unit;
     }
 
-    /**
-     * Converts this QuantityLength to a target unit
-     * Returns a NEW instance (immutability)
-     */
+
     public QuantityLength convertTo(LengthUnit targetUnit) {
         if (targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null");
         }
 
         double baseValue = unit.toBase(value);
-        double convertedValue = targetUnit.fromBase(baseValue);
+        double converted = targetUnit.fromBase(baseValue);
 
-        return new QuantityLength(convertedValue, targetUnit);
+        return new QuantityLength(converted, targetUnit);
     }
 
-    /**
-     * Static conversion utility (UC5)
-     */
-    public static double convert(double value, LengthUnit source, LengthUnit target) {
+    public static double convert(double value, LengthUnit from, LengthUnit to) {
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Value must be finite");
         }
-        if (source == null || target == null) {
+        if (from == null || to == null) {
             throw new IllegalArgumentException("Units cannot be null");
         }
 
-        double baseValue = source.toBase(value);
-        return target.fromBase(baseValue);
+        double base = from.toBase(value);
+        return to.fromBase(base);
     }
 
-    /**
-     * Equality based on physical length (after base conversion)
-     */
+    public QuantityLength add(QuantityLength other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Other quantity cannot be null");
+        }
+
+        double thisBase = unit.toBase(this.value);
+        double otherBase = other.unit.toBase(other.value);
+
+        double sumBase = thisBase + otherBase;
+        double sumInThisUnit = unit.fromBase(sumBase);
+
+        return new QuantityLength(sumInThisUnit, this.unit);
+    }
+
+    public static QuantityLength add(
+            QuantityLength q1, QuantityLength q2) {
+
+        if (q1 == null || q2 == null) {
+            throw new IllegalArgumentException("Quantities cannot be null");
+        }
+        return q1.add(q2);
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof QuantityLength)) return false;
 
         QuantityLength other = (QuantityLength) obj;
+
         double thisBase = unit.toBase(this.value);
         double otherBase = other.unit.toBase(other.value);
 
@@ -70,6 +86,6 @@ public final class QuantityLength {
 
     @Override
     public String toString() {
-        return value + " " + unit.name();
+        return "Quantity(" + value + ", " + unit + ")";
     }
 }
