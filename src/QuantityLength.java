@@ -1,17 +1,20 @@
-public final class QuantityLength {
+import java.util.Objects;
+
+public class QuantityLength {
+
+    private static final double EPSILON = 0.0001;
 
     private final double value;
     private final LengthUnit unit;
 
-    private static final double EPSILON = 0.0001;
-
     public QuantityLength(double value, LengthUnit unit) {
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Value must be finite");
-        }
         if (unit == null) {
             throw new IllegalArgumentException("Unit cannot be null");
         }
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            throw new IllegalArgumentException("Invalid numeric value");
+        }
+
         this.value = value;
         this.unit = unit;
     }
@@ -24,50 +27,32 @@ public final class QuantityLength {
         return unit;
     }
 
-
+    // Convert to another unit
     public QuantityLength convertTo(LengthUnit targetUnit) {
         if (targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null");
         }
 
-        double baseValue = unit.toBase(value);
-        double converted = targetUnit.fromBase(baseValue);
+        double baseValue = unit.convertToBaseUnit(this.value);
+        double convertedValue = targetUnit.convertFromBaseUnit(baseValue);
 
-        return new QuantityLength(converted, targetUnit);
+        return new QuantityLength(convertedValue, targetUnit);
     }
 
-
-    public QuantityLength add(QuantityLength other) {
-        if (other == null) {
-            throw new IllegalArgumentException("Other quantity cannot be null");
+    // Add with target unit
+    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
+        if (other == null || targetUnit == null) {
+            throw new IllegalArgumentException("Invalid input");
         }
 
-        double sumBase =
-                unit.toBase(this.value) +
-                        other.unit.toBase(other.value);
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
 
-        double resultInThisUnit = unit.fromBase(sumBase);
-        return new QuantityLength(resultInThisUnit, this.unit);
-    }
+        double sumBase = thisBase + otherBase;
 
-    public static QuantityLength add(
-            QuantityLength q1,
-            QuantityLength q2,
-            LengthUnit targetUnit) {
+        double finalValue = targetUnit.convertFromBaseUnit(sumBase);
 
-        if (q1 == null || q2 == null) {
-            throw new IllegalArgumentException("Quantities cannot be null");
-        }
-        if (targetUnit == null) {
-            throw new IllegalArgumentException("Target unit cannot be null");
-        }
-
-        double baseSum =
-                q1.unit.toBase(q1.value) +
-                        q2.unit.toBase(q2.value);
-
-        double resultValue = targetUnit.fromBase(baseSum);
-        return new QuantityLength(resultValue, targetUnit);
+        return new QuantityLength(finalValue, targetUnit);
     }
 
     @Override
@@ -77,10 +62,16 @@ public final class QuantityLength {
 
         QuantityLength other = (QuantityLength) obj;
 
-        double thisBase = unit.toBase(this.value);
-        double otherBase = other.unit.toBase(other.value);
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
 
         return Math.abs(thisBase - otherBase) < EPSILON;
+    }
+
+    @Override
+    public int hashCode() {
+        double baseValue = unit.convertToBaseUnit(value);
+        return Objects.hash(baseValue);
     }
 
     @Override
