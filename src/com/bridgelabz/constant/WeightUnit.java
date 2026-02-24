@@ -1,3 +1,5 @@
+package com.bridgelabz.constant;
+
 public enum WeightUnit {
 
         KILOGRAM(1.0),

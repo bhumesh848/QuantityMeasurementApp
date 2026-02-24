@@ -1,18 +1,18 @@
+package com.bridgelabz.constant;
+
 import java.util.Objects;
 
-public final class QuantityWeight {
+public class QuantityLength {
 
-    private static final double EPSILON = 0.000001;
+    private static final double EPSILON = 0.0001;
 
-    private final double value;
-    private final WeightUnit unit;
+    private double value;
+    private LengthUnit unit;
 
-    public QuantityWeight(double value, WeightUnit unit) {
-
+    public QuantityLength(double value, LengthUnit unit) {
         if (unit == null) {
             throw new IllegalArgumentException("Unit cannot be null");
         }
-
         if (Double.isNaN(value) || Double.isInfinite(value)) {
             throw new IllegalArgumentException("Invalid numeric value");
         }
@@ -25,12 +25,12 @@ public final class QuantityWeight {
         return value;
     }
 
-    public WeightUnit getUnit() {
+    public LengthUnit getUnit() {
         return unit;
     }
 
-    public QuantityWeight convertTo(WeightUnit targetUnit) {
-
+    // Convert to another unit
+    public QuantityLength convertTo(LengthUnit targetUnit) {
         if (targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null");
         }
@@ -38,29 +38,11 @@ public final class QuantityWeight {
         double baseValue = unit.convertToBaseUnit(this.value);
         double convertedValue = targetUnit.convertFromBaseUnit(baseValue);
 
-        return new QuantityWeight(convertedValue, targetUnit);
+        return new QuantityLength(convertedValue, targetUnit);
     }
 
-
-    public QuantityWeight add(QuantityWeight other) {
-
-        if (other == null) {
-            throw new IllegalArgumentException("Other weight cannot be null");
-        }
-
-        double thisBase = this.unit.convertToBaseUnit(this.value);
-        double otherBase = other.unit.convertToBaseUnit(other.value);
-
-        double sumBase = thisBase + otherBase;
-
-        double finalValue = this.unit.convertFromBaseUnit(sumBase);
-
-        return new QuantityWeight(finalValue, this.unit);
-    }
-
-
-    public QuantityWeight add(QuantityWeight other, WeightUnit targetUnit) {
-
+    // Add with target unit
+    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
         if (other == null || targetUnit == null) {
             throw new IllegalArgumentException("Invalid input");
         }
@@ -72,20 +54,18 @@ public final class QuantityWeight {
 
         double finalValue = targetUnit.convertFromBaseUnit(sumBase);
 
-        return new QuantityWeight(finalValue, targetUnit);
+        return new QuantityLength(finalValue, targetUnit);
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) return Boolean.TRUE;
+        if (!(obj instanceof QuantityLength)) return false;
 
-        if (this == obj) return true;
-
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        QuantityWeight other = (QuantityWeight) obj;
+        QuantityLength o = (QuantityLength) obj;
 
         double thisBase = this.unit.convertToBaseUnit(this.value);
-        double otherBase = other.unit.convertToBaseUnit(other.value);
+        double otherBase = o.unit.convertToBaseUnit(o.value);
 
         return Math.abs(thisBase - otherBase) < EPSILON;
     }
