@@ -1,28 +1,34 @@
 package com.bridgelabz.constant;
 
-public enum WeightUnit {
+public enum WeightUnit implements IMeasurable {
 
-        KILOGRAM(1.0),
-        GRAM(0.001),            // 1 g = 0.001 kg
-        POUND(0.453592);        // 1 lb ≈ 0.453592 kg
+    KILOGRAM(1.0),
+    GRAM(0.001),
+    POUND(0.453592);
 
-        private final double conversionFactorToKg;
+    private final double conversionFactor; // relative to base unit (KILOGRAM)
 
-        WeightUnit(double conversionFactorToKg) {
-            this.conversionFactorToKg = conversionFactorToKg;
-        }
-
-
-        public double convertToBaseUnit(double value) {
-            return value * conversionFactorToKg;
-        }
-
-        public double convertFromBaseUnit(double baseValue) {
-            return baseValue / conversionFactorToKg;
-        }
-
-        public double getConversionFactor() {
-            return conversionFactorToKg;
-        }
+    WeightUnit(double conversionFactor) {
+        this.conversionFactor = conversionFactor;
     }
 
+    @Override
+    public double getConversionFactor() {
+        return conversionFactor;
+    }
+
+    @Override
+    public double convertToBaseUnit(double value) {
+        return value * conversionFactor;
+    }
+
+    @Override
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / conversionFactor;
+    }
+
+    @Override
+    public String getUnitName() {
+        return this.name();
+    }
+}
