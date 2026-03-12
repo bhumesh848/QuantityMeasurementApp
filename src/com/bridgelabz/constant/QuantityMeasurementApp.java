@@ -12,8 +12,8 @@ public class QuantityMeasurementApp {
     public static <U extends IMeasurable> void demonstrateConversion(
             Quantity<U> q, U targetUnit) {
 
-        System.out.println(q + " converted to " + targetUnit +
-                " = " + q.convertTo(targetUnit));
+        System.out.println(q + " converted to "
+                + targetUnit + " = " + q.convertTo(targetUnit));
     }
 
     public static <U extends IMeasurable> void demonstrateAddition(
@@ -25,25 +25,46 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        // Length operations
         Quantity<LengthUnit> length1 =
                 new Quantity<>(1.0, LengthUnit.FEET);
+
         Quantity<LengthUnit> length2 =
                 new Quantity<>(12.0, LengthUnit.INCHES);
 
         demonstrateEquality(length1, length2);
+
         demonstrateConversion(length1, LengthUnit.INCHES);
+
         demonstrateAddition(length1, length2, LengthUnit.FEET);
 
-        // Weight operations
         Quantity<WeightUnit> weight1 =
                 new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
         Quantity<WeightUnit> weight2 =
                 new Quantity<>(1000.0, WeightUnit.GRAM);
 
         demonstrateEquality(weight1, weight2);
+
         demonstrateConversion(weight1, WeightUnit.GRAM);
+
         demonstrateAddition(weight1, weight2, WeightUnit.KILOGRAM);
 
+
+        Quantity<VolumeUnit> volume1 =
+                new Quantity<>(1.0, VolumeUnit.LITRE);
+
+        Quantity<VolumeUnit> volume2 =
+                new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        Quantity<VolumeUnit> volume3 =
+                new Quantity<>(1.0, VolumeUnit.GALLON);
+
+        demonstrateEquality(volume1, volume2);
+
+        demonstrateConversion(volume1, VolumeUnit.MILLILITRE);
+
+        demonstrateAddition(volume1, volume2, VolumeUnit.LITRE);
+
+        demonstrateAddition(volume1, volume3, VolumeUnit.MILLILITRE);
     }
 }
