@@ -32,7 +32,6 @@ public class QuantityMeasurementApp {
                 new Quantity<>(12.0, LengthUnit.INCHES);
 
         demonstrateEquality(length1, length2);
-
         demonstrateConversion(length1, LengthUnit.INCHES);
 
         demonstrateAddition(length1, length2, LengthUnit.FEET);
