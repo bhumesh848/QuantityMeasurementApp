@@ -2,68 +2,141 @@ package com.bridgelabz.constant;
 
 @SuppressWarnings("java:S106")
 public class QuantityMeasurementApp {
-
-    public static <U extends IMeasurable> void demonstrateEquality(
-            Quantity<U> q1, Quantity<U> q2) {
-
-        System.out.println(q1 + " equals " + q2 + " ? " + q1.equals(q2));
+    public static <U extends IMeasurable> boolean demonstrateEquality(Quantity<U> quantity1, Quantity<U> quantity2){
+        return quantity1.equals(quantity2);
     }
 
-    public static <U extends IMeasurable> void demonstrateConversion(
-            Quantity<U> q, U targetUnit) {
-
-        System.out.println(q + " converted to "
-                + targetUnit + " = " + q.convertTo(targetUnit));
+    public static <U extends IMeasurable> boolean demonstrateComparison(double value1, U unit1, double value2, U unit2){
+        Quantity<U> quantity1 = new Quantity<>(value1, unit1);
+        Quantity<U> quantity2 = new Quantity<>(value2, unit2);
+        return quantity1.equals(quantity2);
     }
 
-    public static <U extends IMeasurable> void demonstrateAddition(
-            Quantity<U> q1, Quantity<U> q2, U targetUnit) {
+    public static <U extends IMeasurable> Quantity<U> demonstrateConversion(double value, U fromUnit, U toTargetUnit){
+        Quantity<U> quantity = new Quantity<>(value, fromUnit);
+        return quantity.convertTo(toTargetUnit);
+    }
 
-        System.out.println(q1 + " + " + q2 +
-                " = " + q1.add(q2, targetUnit));
+    public static <U extends IMeasurable> Quantity<U> demonstrateConversion(Quantity<U> quantity, U toTargetUnit){
+        return quantity.convertTo(toTargetUnit);
+    }
+
+    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2){
+        return quantity1.add(quantity2);
+    }
+
+    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit){
+        return quantity1.add(quantity2, targetUnit);
+    }
+
+    public static <U extends IMeasurable> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2){
+        return quantity1.subtract(quantity2);
+    }
+
+    public static <U extends IMeasurable> Quantity<U> demonstrateSubtraction(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit){
+        return quantity1.subtract(quantity2, targetUnit);
+    }
+
+    public static <U extends IMeasurable> double demonstrateDivision(Quantity<U> quantity1, Quantity<U> quantity2){
+        return quantity1.divide(quantity2);
     }
 
     public static void main(String[] args) {
+        System.out.println("=== GENERIC METHOD TESTING ===\n");
 
-        Quantity<LengthUnit> length1 =
-                new Quantity<>(1.0, LengthUnit.FEET);
+        // ---------- LENGTH TESTS ----------
+        Quantity<LengthUnit> q1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q2 = new Quantity<>(12.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> q3 = new Quantity<>(1.0, LengthUnit.YARDS);
 
-        Quantity<LengthUnit> length2 =
-                new Quantity<>(12.0, LengthUnit.INCHES);
+        System.out.println("Equality (1 FEET == 12 INCHES): " +
+                demonstrateEquality(q1, q2));
 
-        demonstrateEquality(length1, length2);
-        demonstrateConversion(length1, LengthUnit.INCHES);
+        System.out.println("Comparison (1 FEET , 12 INCHES): " +
+                demonstrateComparison(1.0, LengthUnit.FEET, 12.0, LengthUnit.INCHES));
 
-        demonstrateAddition(length1, length2, LengthUnit.FEET);
+        System.out.println("Conversion (1 FEET -> INCHES): " +
+                demonstrateConversion(1.0, LengthUnit.FEET, LengthUnit.INCHES));
 
-        Quantity<WeightUnit> weight1 =
-                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        System.out.println("Conversion (q2 -> FEET): " +
+                demonstrateConversion(q2, LengthUnit.FEET));
 
-        Quantity<WeightUnit> weight2 =
-                new Quantity<>(1000.0, WeightUnit.GRAM);
+        System.out.println("Addition (1 FEET + 12 INCHES): " +
+                demonstrateAddition(q1, q2));
 
-        demonstrateEquality(weight1, weight2);
+        System.out.println("Addition (1 FEET + 12 INCHES in INCHES): " +
+                demonstrateAddition(q1, q2, LengthUnit.INCHES));
 
-        demonstrateConversion(weight1, WeightUnit.GRAM);
+        System.out.println("Addition (1 FEET + 1 YARD in FEET): " +
+                demonstrateAddition(q1, q3, LengthUnit.FEET));
 
-        demonstrateAddition(weight1, weight2, WeightUnit.KILOGRAM);
+
+        // ---------- WEIGHT TESTS ----------
+        Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> w2 = new Quantity<>(1000.0, WeightUnit.GRAM);
+
+        System.out.println("\nEquality (1 KG == 1000 GRAM): " +
+                demonstrateEquality(w1, w2));
+
+        System.out.println("Comparison (1 KG , 1000 GRAM): " +
+                demonstrateComparison(1.0, WeightUnit.KILOGRAM, 1000.0, WeightUnit.GRAM));
+
+        System.out.println("Conversion (1 KG -> GRAM): " +
+                demonstrateConversion(1.0, WeightUnit.KILOGRAM, WeightUnit.GRAM));
+
+        System.out.println("Addition (1 KG + 1000 GRAM in KG): " +
+                demonstrateAddition(w1, w2, WeightUnit.KILOGRAM));
 
 
-        Quantity<VolumeUnit> volume1 =
-                new Quantity<>(1.0, VolumeUnit.LITRE);
+        // ---------- VolumeEnumEnum TESTS ----------
+        Quantity<VolumeUnit> v1 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        Quantity<VolumeUnit> v2 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> v3 = new Quantity<>(1.0, VolumeUnit.GALLON);
 
-        Quantity<VolumeUnit> volume2 =
-                new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        System.out.println("\n=== VolumeEnumEnum TESTS ===");
 
-        Quantity<VolumeUnit> volume3 =
-                new Quantity<>(1.0, VolumeUnit.GALLON);
+        System.out.println("Equality (1000 ML == 1 L): " +
+                demonstrateEquality(v1, v2));
 
-        demonstrateEquality(volume1, volume2);
+        System.out.println("Comparison (1000 ML , 1 L): " +
+                demonstrateComparison(1000.0, VolumeUnit.MILLILITRE, 1.0, VolumeUnit.LITRE));
 
-        demonstrateConversion(volume1, VolumeUnit.MILLILITRE);
+        System.out.println("Conversion (1 L -> ML): " +
+                demonstrateConversion(1.0, VolumeUnit.LITRE, VolumeUnit.MILLILITRE));
 
-        demonstrateAddition(volume1, volume2, VolumeUnit.LITRE);
+        System.out.println("Conversion (1000 ML -> L): " +
+                demonstrateConversion(v1, VolumeUnit.LITRE));
 
-        demonstrateAddition(volume1, volume3, VolumeUnit.MILLILITRE);
+        System.out.println("Addition (1000 ML + 1 L in ML): " +
+                demonstrateAddition(v1, v2, VolumeUnit.MILLILITRE));
+
+        System.out.println("Addition (1 L + 1 GALLON in L): " +
+                demonstrateAddition(v2, v3, VolumeUnit.LITRE));
+
+
+        System.out.println("\n=== SUBTRACTION TESTS ===");
+        System.out.println("1 FEET - 6 INCHES = " +
+                demonstrateSubtraction(q1, new Quantity<>(6.0, LengthUnit.INCHES)));
+
+        System.out.println("1 L - 500 ML = " +
+                demonstrateSubtraction(v2, new Quantity<>(500.0, VolumeUnit.MILLILITRE), VolumeUnit.GALLON));
+
+
+        System.out.println("\n=== DIVISION TESTS ===");
+        System.out.println("10 KG / 5 KG = " +
+                demonstrateDivision(new Quantity<>(10.0, WeightUnit.KILOGRAM),
+                        new Quantity<>(5.0, WeightUnit.KILOGRAM)));
+
+        System.out.println("1 L / 500 ML = " +
+                demonstrateDivision(v2, new Quantity<>(500.0, VolumeUnit.MILLILITRE)));
+
+        // ---------- TYPE SAFETY ----------
+        System.out.println("\n=== TYPE SAFETY DEMO ===");
+        // ❌ Will NOT compile (correct behavior)
+        // demonstrateEquality(q1, w1);
+        // demonstrateEquality(q1, v1);
+        // demonstrateEquality(w1, v1);
+
+        System.out.println("Cross-category comparison blocked at compile-time ✅");
     }
 }

@@ -1,12 +1,7 @@
 package com.bridgelabz.constant;
 
 public interface IMeasurable {
-
-    double getConversionFactor();
-
-    double convertToBaseUnit(double value);
-
-    double convertFromBaseUnit(double baseValue);
-
-    String getUnitName();
+    public double getConversionFactor();
+    public double convertToBaseUnit(double value);
+    public double convertFromBaseUnit(double baseValue);
 }
