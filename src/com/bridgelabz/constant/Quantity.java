@@ -1,5 +1,6 @@
 package com.bridgelabz.constant;
 import java.util.function.DoubleBinaryOperator;
+
 public class Quantity<U extends IMeasurable>{
     private double value;
     private U unit;
@@ -82,6 +83,7 @@ public class Quantity<U extends IMeasurable>{
     ) {
 
         validateArithmeticOperands(other, targetUnit, targetUnitRequired);
+        this.unit.validateOperationSupport(operation.name());
 
         double base1 = this.unit.convertToBaseUnit(this.value);
         double base2 = other.unit.convertToBaseUnit(other.value);
